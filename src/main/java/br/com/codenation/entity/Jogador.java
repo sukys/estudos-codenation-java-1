@@ -5,10 +5,12 @@ import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper=true,  exclude = {"idTime","nome", "dataNascimento","nivelHabilidade","salario"})
 public class Jogador extends BaseEntity {
 
 	@NonNull
@@ -31,7 +33,7 @@ public class Jogador extends BaseEntity {
 	public Jogador(@NonNull Long id, @NonNull Long idTime, @NonNull String nome, @NonNull LocalDate dataNascimento,
 			@NonNull Integer nivelHabilidade, @NonNull BigDecimal salario) {
 		this(idTime, nome, dataNascimento, nivelHabilidade, salario);
-		this.idTime = idTime;
+		this.id = id;
 
 	}
 	

@@ -17,8 +17,8 @@ import br.com.codenation.util.CodenationUtil;
 
 public class DesafioMeuTimeApplication implements MeuTimeInterface {
 
-	private final List<Time> TIMES = new ArrayList<>();
-	private final List<Jogador> JOGADORES = new ArrayList<>();
+	private List<Time> TIMES = new ArrayList<>();
+	private List<Jogador> JOGADORES = new ArrayList<>();
 	
 	
 	public void incluirTime(Long id, String nome, LocalDate dataCriacao, String corUniformePrincipal, String corUniformeSecundario) {
@@ -28,7 +28,7 @@ public class DesafioMeuTimeApplication implements MeuTimeInterface {
 	}
 
 	public void incluirJogador(Long id, Long idTime, String nome, LocalDate dataNascimento, Integer nivelHabilidade, BigDecimal salario) {
-		Jogador jogador = new Jogador(idTime, nome, dataNascimento, nivelHabilidade, salario);
+		Jogador jogador = new Jogador(id, idTime, nome, dataNascimento, nivelHabilidade, salario);
 		if(CodenationUtil.listContainsId(JOGADORES, id)) { throw new IdentificadorUtilizadoException(); }
 		if(!CodenationUtil.listContainsId(TIMES, idTime)) { throw new TimeNaoEncontradoException();}
 		JOGADORES.add(jogador);
@@ -46,7 +46,8 @@ public class DesafioMeuTimeApplication implements MeuTimeInterface {
 	}
 
 	public String buscarNomeJogador(Long idJogador) {
-		return recuperarJogador(idJogador).getNome();
+		Jogador j = recuperarJogador(idJogador);
+		return j.getNome();
 	}
 
 	public String buscarNomeTime(Long idTime) {
@@ -57,6 +58,7 @@ public class DesafioMeuTimeApplication implements MeuTimeInterface {
 		recuperarTime(idTime);
 		return JOGADORES.stream()
 				.filter(p->p.getIdTime() == idTime)
+				.sorted(Comparator.comparingLong(Jogador::getId))
 				.map(Jogador::getId)
 				.collect(Collectors.toList());
 	}
@@ -69,9 +71,11 @@ public class DesafioMeuTimeApplication implements MeuTimeInterface {
 	}
 
 	public Long buscarJogadorMaisVelho(Long idTime) {
+		//Usar o menor identificador como critério de desempate.
 		recuperarTime(idTime);
 		return JOGADORES.stream()
 				.filter(p->p.getIdTime() == idTime)
+				.sorted(Comparator.comparingLong(Jogador::getId).reversed())
 				.min(Comparator.comparing(Jogador::getDataNascimento)).get().getId();
 	}
 
@@ -95,8 +99,9 @@ public class DesafioMeuTimeApplication implements MeuTimeInterface {
 
 	public List<Long> buscarTopJogadores(Integer top) {
 		return JOGADORES.stream()
-				.sorted(Comparator.comparing(Jogador::getNivelHabilidade))
+				.sorted(Comparator.comparing(Jogador::getNivelHabilidade).reversed())
 				.map(Jogador::getId)
+				.limit(top)
 				.collect(Collectors.toList());
 	}
 	
