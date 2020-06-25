@@ -9,8 +9,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 
 @Data
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper=true,  exclude = {"idTime","nome", "dataNascimento","nivelHabilidade","salario"})
+@AllArgsConstructor()
+@EqualsAndHashCode(callSuper = true, exclude = { "idTime", "nome", "dataNascimento", "nivelHabilidade", "salario" })
 public class Jogador extends BaseEntity {
 
 	@NonNull
@@ -23,22 +23,18 @@ public class Jogador extends BaseEntity {
 	private LocalDate dataNascimento;
 
 	@NonNull
-	private Integer nivelHabilidade; // * Nível de habilidade do jogador (0 a 100)
+	private Integer nivelHabilidade;
 
 	@NonNull
 	private BigDecimal salario;
 
-	// Contrutor 
-	
 	public Jogador(@NonNull Long id, @NonNull Long idTime, @NonNull String nome, @NonNull LocalDate dataNascimento,
 			@NonNull Integer nivelHabilidade, @NonNull BigDecimal salario) {
 		this(idTime, nome, dataNascimento, nivelHabilidade, salario);
 		this.id = id;
 
 	}
-	
-	// Getters e setters
-	
+
 	public void setNivelHabilidade(Integer nivelHabilidade) {
 		if (nivelHabilidade == null) {
 			nivelHabilidade = 0;
@@ -49,7 +45,5 @@ public class Jogador extends BaseEntity {
 		}
 		this.nivelHabilidade = nivelHabilidade;
 	}
-
-
 
 }
