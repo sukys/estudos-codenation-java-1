@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import br.com.codenation.entity.Jogador;
 import br.com.codenation.entity.Time;
+import br.com.codenation.exceptions.CapitaoNaoInformadoException;
 import br.com.codenation.exceptions.IdentificadorUtilizadoException;
 import br.com.codenation.exceptions.JogadorNaoEncontradoException;
 import br.com.codenation.exceptions.TimeNaoEncontradoException;
@@ -42,7 +43,11 @@ public class DesafioMeuTimeApplication implements MeuTimeInterface {
 	}
 
 	public Long buscarCapitaoDoTime(Long idTime) {
-		return recuperarTime(idTime).getId_capitao();
+		Time time = recuperarTime(idTime);
+		if(time.getId_capitao() == null || time.getId_capitao() <=0) {
+			throw new CapitaoNaoInformadoException();
+		}
+		return time.getId_capitao();
 	}
 
 	public String buscarNomeJogador(Long idJogador) {
@@ -122,6 +127,7 @@ public class DesafioMeuTimeApplication implements MeuTimeInterface {
 	 * Atualiza um jogador na lista
 	 * @param jogadorAtualizado
 	 */
+	@SuppressWarnings("unused")
 	private void atualizarJogador(Jogador jogadorAtualizado) {
 		int index = JOGADORES.indexOf(recuperarJogador(jogadorAtualizado.getId()));
 		JOGADORES.set(index, jogadorAtualizado);
